@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import NotFound from "./components/NotFound";
+import { ServerError } from "./components/ServerError";
 
 type DepositStage = "input" | "approving" | "pending" | "confirmed" | "failed";
 type DemoOutcome = "confirmed" | "failed";
@@ -15,6 +16,8 @@ const APP_ROUTES = {
   marketplace: "/marketplace",
   billing: "/billing",
   documentation: "/documentation",
+  status: "/status",
+  serverError: "/500",
 } as const;
 
 function formatUsdc(value: number) {
@@ -232,6 +235,10 @@ function App() {
     resetFlow("50", 50);
   };
 
+  const handleServerRetry = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="app-shell">
       <div className="ambient ambient-a" />
@@ -436,6 +443,31 @@ function App() {
                   prototype to production quickly.
                 </p>
               </section>
+            }
+          />
+
+          <Route
+            path={APP_ROUTES.status}
+            element={
+              <section className="surface placeholder-card">
+                <p className="eyebrow">Status</p>
+                <h2>System status updates in one place.</h2>
+                <p>
+                  All core services are operational. If you are still seeing
+                  issues, please contact support and include what action you
+                  were trying to complete.
+                </p>
+              </section>
+            }
+          />
+
+          <Route
+            path={APP_ROUTES.serverError}
+            element={
+              <ServerError
+                onRetry={handleServerRetry}
+                onGoHome={() => navigate(APP_ROUTES.home)}
+              />
             }
           />
 
