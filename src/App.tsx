@@ -15,6 +15,8 @@ const APP_ROUTES = {
   marketplace: "/marketplace",
   billing: "/billing",
   documentation: "/documentation",
+  status: "/status",
+  serverError: "/500",
 } as const;
 
 function formatUsdc(value: number) {
@@ -230,6 +232,10 @@ function App() {
 
   const handleDepositAnother = () => {
     resetFlow("50", 50);
+  };
+
+  const handleServerRetry = () => {
+    window.location.reload();
   };
 
   return (
@@ -520,6 +526,31 @@ function App() {
           />
 
           <Route
+            path={APP_ROUTES.status}
+            element={
+              <section className="surface placeholder-card">
+                <p className="eyebrow">Status</p>
+                <h2>System status updates in one place.</h2>
+                <p>
+                  All core services are operational. If you are still seeing
+                  issues, please contact support and include what action you
+                  were trying to complete.
+                </p>
+              </section>
+            }
+          />
+
+          <Route
+            path={APP_ROUTES.serverError}
+            element={
+              <ServerError
+                onRetry={handleServerRetry}
+                onGoHome={() => navigate(APP_ROUTES.home)}
+              />
+            }
+          />
+
+          <Route
             path="*"
             element={<NotFound onGoHome={() => navigate(APP_ROUTES.home)} />}
           />
@@ -536,8 +567,9 @@ function App() {
         <nav className="footer-nav" aria-label="Footer">
           <NavLink to={APP_ROUTES.dashboard}>Dashboard</NavLink>
           <NavLink to={APP_ROUTES.marketplace}>Marketplace</NavLink>
-          <NavLink to={APP_ROUTES.documentation}>Documentation</NavLink>
           <NavLink to={APP_ROUTES.billing}>Billing</NavLink>
+          <NavLink to={APP_ROUTES.status}>Status</NavLink>
+          <NavLink to={APP_ROUTES.documentation}>Documentation</NavLink>
         </nav>
       </footer>
 
